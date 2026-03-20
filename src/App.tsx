@@ -153,8 +153,10 @@ function App() {
 
       {/* Right Pane - Operations and Dashboard */}
       <div className="right-pane">
-        <header className="app-header">
-          <h1>Aura Notes</h1>
+        <header className="app-header glass-panel">
+          <div className="logo-container">
+            <img src="./logo.png" alt="Aura Notes" className="app-logo" />
+          </div>
           <p>Interactive Fingerboard & Scale Explorer</p>
         </header>
 

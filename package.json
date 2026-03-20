@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && electron-builder",
+    "build:web": "tsc -b && vite build",
+    "android:sync": "npm run build:web && cd android-app && npx cap sync",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -35,5 +37,22 @@
     "vite-plugin-electron-renderer": "^0.14.6",
     "vite-plugin-pwa": "^1.2.0",
     "wait-on": "^9.0.4"
+  },
+  "build": {
+    "appId": "com.aurnotes.app",
+    "productName": "Aura Notes",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.music"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }

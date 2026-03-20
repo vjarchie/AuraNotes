@@ -16,7 +16,9 @@ export default defineConfig({
         navigateFallback: 'index.html'
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,mp3}'],
+        globIgnores: ['**/win-unpacked/**'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true

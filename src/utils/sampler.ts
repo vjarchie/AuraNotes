@@ -7,7 +7,7 @@ const SAMPLES: Record<string, number> = {
 export class Sampler {
   private audioCtx: AudioContext;
   private buffers: Record<number, AudioBuffer> = {};
-  private rootUrl: string = '/samples/violin/';
+  private rootUrl: string = './samples/violin/';
   private gainNode: GainNode;
 
   constructor(audioCtx: AudioContext) {
@@ -35,7 +35,10 @@ export class Sampler {
     this.gainNode.gain.setTargetAtTime(volume, this.audioCtx.currentTime, 0.1);
   }
 
-  public play(pitch: number, duration: number = 1.5) {
+  public async play(pitch: number, duration: number = 1.5) {
+    if (this.audioCtx.state === 'suspended') {
+      await this.audioCtx.resume();
+    }
     const nearestPitch = this.findNearestPitch(pitch);
     const buffer = this.buffers[nearestPitch];
     if (!buffer) return;

@@ -4,7 +4,9 @@ import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.tsx'
 
-registerSW({ immediate: true })
+if (window.location.protocol !== 'file:') {
+  registerSW({ immediate: true })
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -31,13 +31,15 @@ export const SheetViewer: React.FC<Props> = ({ notePitch, rootKey, scale }) => {
     const stave = new Stave(20, 20, 150);
     stave.addClef('treble');
     
-    let vexKey = rootKey;
-    if (scale.toLowerCase().includes('minor')) vexKey += 'm';
-    
-    try {
-      stave.addKeySignature(vexKey);
-    } catch (e) {
-      console.warn("Key signature unsupported:", vexKey);
+    if (rootKey !== 'None') {
+      let vexKey = rootKey;
+      if (scale.toLowerCase().includes('minor')) vexKey += 'm';
+      
+      try {
+        stave.addKeySignature(vexKey);
+      } catch (e) {
+        console.warn("Key signature unsupported:", vexKey);
+      }
     }
     
     stave.setContext(context).draw();
@@ -77,7 +79,7 @@ export const SheetViewer: React.FC<Props> = ({ notePitch, rootKey, scale }) => {
   return (
     <div className="sheet-viewer-container glass-panel">
       <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: 'var(--accent-color)', textTransform: 'uppercase' }}>
-        Active Note ({rootKey} {scale})
+        Active Note {rootKey !== 'None' ? `(${rootKey} ${scale})` : '(Master View)'}
       </h3>
       <div ref={containerRef} className="vexflow-canvas"></div>
     </div>

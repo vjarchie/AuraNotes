@@ -37,6 +37,17 @@ Aura Notes is built as a **Progressive Web App (PWA)**, meaning you can install 
 3. Click "Install". 
 4. Aura Notes will now appear in your Taskbar or Applications folder as a standalone app!
 
+### Android (APK / Play Store AAB)
+
+The same web UI runs inside a native shell via **[Capacitor](https://capacitorjs.com/)**. All Android-specific files live under **`android-app/`** (Capacitor config + Gradle project).
+
+From the repo root:
+
+1. `npm run android:sync` — builds the web app and copies `dist` into the Android project.
+2. Open **`android-app/android`** in Android Studio and run or build a signed release.
+
+Details: see [`android-app/README.md`](android-app/README.md).
+
 ---
 
 ## 🛠️ Development
