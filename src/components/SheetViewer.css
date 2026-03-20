@@ -1,0 +1,26 @@
+.sheet-viewer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: var(--glass-bg);
+  border-radius: 12px;
+  min-width: 250px;
+  max-width: 300px;
+  height: max-content;
+  margin-top: 20px;
+}
+
+.empty-sheet {
+  padding: 40px 20px;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.vexflow-canvas svg {
+  background-color: transparent !important;
+  /* Soft white stroke for visibility on dark mode! Vexflow draws black by default */
+  filter: invert(1) hue-rotate(180deg) brightness(1.5);
+}

@@ -1,0 +1,45 @@
+.playback-panel {
+  background: var(--glass-bg);
+  border-top: 1px solid var(--glass-border);
+  margin-top: -10px;
+}
+
+.play-button-group {
+  justify-content: center;
+  align-items: center;
+}
+
+.play-button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(100, 108, 255, 0.4);
+  transition: all 0.2s;
+  min-width: 140px;
+}
+
+.play-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.6);
+  background: var(--accent-hover);
+}
+
+.play-button.playing {
+  background: #ff3b30;
+  box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4);
+}
+
+.play-button.playing:hover {
+  background: #ff5045;
+  box-shadow: 0 6px 20px rgba(255, 59, 48, 0.6);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-color);
+}
