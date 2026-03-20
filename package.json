@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build && electron-builder",
     "build:web": "tsc -b && vite build",
-    "android:sync": "npm run build:web && cd android-app && npx cap sync",
     "lint": "eslint .",
     "preview": "vite preview"
   },
