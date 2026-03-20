@@ -34,7 +34,7 @@ export const Fingerboard: React.FC<Props> = ({ activePitchClasses, rootNote, pos
               className={`finger-overlay finger-overlay-${finger}`} 
               style={{ gridRow: `${gridRowStart} / ${gridRowEnd}`, gridColumn: '2 / 6' }}
             >
-              <div className="finger-overlay-label">Finger {finger}</div>
+              <div className="finger-overlay-label">Finger<br />{finger}</div>
             </div>
           );
         })}
