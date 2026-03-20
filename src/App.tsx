@@ -33,6 +33,10 @@ function App() {
   const playbackTimerRef = useRef<number | null>(null);
 
   const activePitchClasses = useMemo(() => {
+    if (selectedKey === 'None') {
+      return new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    }
+
     let pitchClasses = new Set<number>();
     
     const scaleIntervals = SCALES[selectedScale as keyof typeof SCALES];
@@ -51,6 +55,8 @@ function App() {
   }, [selectedKey, selectedScale, selectedArpeggio]);
 
   const playbackSequence = useMemo(() => {
+    if (selectedKey === 'None') return [];
+
     let intervals = SCALES[selectedScale as keyof typeof SCALES];
     if (selectedArpeggio !== 'None') {
       intervals = ARPEGGIOS[selectedArpeggio as keyof typeof ARPEGGIOS];
@@ -168,6 +174,7 @@ function App() {
           selectedScale={selectedScale} onScaleChange={setSelectedScale}
           selectedArpeggio={selectedArpeggio} onArpeggioChange={setSelectedArpeggio}
           selectedPosition={selectedPosition} onPositionChange={setSelectedPosition}
+          disabled={selectedKey === 'None'}
         />
         
         <PlaybackControls 

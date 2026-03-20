@@ -9,6 +9,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'pwa-192x192.png', 'pwa-512x512.png', 'icons.svg'],
+      devOptions: {
+        enabled: true,
+        type: 'module',
+        navigateFallback: 'index.html'
+      },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         cleanupOutdatedCaches: true,
@@ -20,6 +25,8 @@ export default defineConfig({
         short_name: 'AuraNotes',
         description: 'Interactive Fingerboard & Scale Explorer',
         theme_color: '#08040a',
+        start_url: '/',
+        display: 'standalone',
         icons: [
           {
             src: 'pwa-192x192.png',

@@ -12,13 +12,15 @@ interface Props {
   onArpeggioChange: (a: string) => void;
   selectedPosition: PositionName;
   onPositionChange: (p: PositionName) => void;
+  disabled?: boolean;
 }
 
 export const Controls: React.FC<Props> = ({
   selectedKey, onKeyChange,
   selectedScale, onScaleChange,
   selectedArpeggio, onArpeggioChange,
-  selectedPosition, onPositionChange
+  selectedPosition, onPositionChange,
+  disabled
 }) => {
   return (
     <div className="controls-container glass-panel">
@@ -29,16 +31,16 @@ export const Controls: React.FC<Props> = ({
         </select>
       </div>
 
-      <div className="control-group">
+      <div className={`control-group ${disabled ? 'disabled-control' : ''}`}>
         <label>Scale</label>
-        <select value={selectedScale} onChange={e => onScaleChange(e.target.value)}>
+        <select value={selectedScale} onChange={e => onScaleChange(e.target.value)} disabled={disabled}>
           {Object.keys(SCALES).map(s => <option key={s} value={s}>{s.replace(/([A-Z])/g, ' $1').trim()}</option>)}
         </select>
       </div>
 
-      <div className="control-group">
+      <div className={`control-group ${disabled ? 'disabled-control' : ''}`}>
         <label>Highlight Arpeggio</label>
-        <select value={selectedArpeggio} onChange={e => onArpeggioChange(e.target.value)}>
+        <select value={selectedArpeggio} onChange={e => onArpeggioChange(e.target.value)} disabled={disabled}>
           <option value="None">None</option>
           {Object.keys(ARPEGGIOS).map(a => <option key={a} value={a}>{a.replace(/([A-Z])/g, ' $1').trim()}</option>)}
         </select>
