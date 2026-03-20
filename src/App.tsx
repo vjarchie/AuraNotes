@@ -24,9 +24,9 @@ function App() {
   const [selectedArpeggio, setSelectedArpeggio] = useState<string>('None');
   const [selectedPosition, setSelectedPosition] = useState<PositionName>('1st Position');
 
-  // Auto-play state
   const [octaves, setOctaves] = useState(1);
   const [tempo, setTempo] = useState(60);
+  const [volume, setVolume] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playingNotePitch, setPlayingNotePitch] = useState<number | null>(null);
 
@@ -51,8 +51,12 @@ function App() {
   }, [selectedKey, selectedScale, selectedArpeggio]);
 
   const playbackSequence = useMemo(() => {
-    const scaleIntervals = SCALES[selectedScale as keyof typeof SCALES];
-    if (!scaleIntervals) return [];
+    let intervals = SCALES[selectedScale as keyof typeof SCALES];
+    if (selectedArpeggio !== 'None') {
+      intervals = ARPEGGIOS[selectedArpeggio as keyof typeof ARPEGGIOS];
+    }
+    
+    if (!intervals) return [];
     
     const names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const flats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -60,10 +64,9 @@ function App() {
     if (rootClass === -1) rootClass = flats.indexOf(selectedKey);
     
     const basePitch = getLowestTonicPitch(rootClass);
-    return getScaleSequence(basePitch, scaleIntervals, octaves);
-  }, [selectedKey, selectedScale, octaves]);
+    return getScaleSequence(basePitch, intervals, octaves);
+  }, [selectedKey, selectedScale, selectedArpeggio, octaves]);
 
-  // Auto Playback Engine
   useEffect(() => {
     if (isPlaying) {
       let index = 0;
@@ -71,7 +74,7 @@ function App() {
       
       playbackTimerRef.current = window.setInterval(() => {
         if (index >= playbackSequence.length) {
-          index = 0; // Loop the sequence indefinitely until stopped
+          index = 0; 
         }
         
         const currentPitch = playbackSequence[index];
@@ -87,8 +90,6 @@ function App() {
         clearInterval(playbackTimerRef.current);
         playbackTimerRef.current = null;
       }
-      // If not playing rhythmically, we don't clear playingNotePitch immediately 
-      // if we want it to stay highlighted after click. But typical auto-play stops clear it.
       if (isPlaying === false) setPlayingNotePitch(null); 
     }
     
@@ -105,7 +106,7 @@ function App() {
 
        for (const pos of PLAYING_POSITIONS) {
          if (pos.name === 'All') continue;
-         const canPlay = frets.some(f => f >= 0 && isNotePlayableInPosition(f, pos.name));
+         const canPlay = frets.   some(f => f >= 0 && isNotePlayableInPosition(f, pos.name));
          if (canPlay) return pos.name;
        }
        return prev;
@@ -113,7 +114,6 @@ function App() {
   };
 
   const handleNoteClick = (pitch: number) => {
-    // If auto-playing, stop it to take manual control
     if (isPlaying) setIsPlaying(false);
     setPlayingNotePitch(pitch);
     playSynthTone(getFrequency(pitch));
@@ -132,7 +132,7 @@ function App() {
       gainNode.connect(audioCtx.destination);
 
       gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+      gainNode.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.05);
       gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
 
       oscillator.start(audioCtx.currentTime);
@@ -144,12 +144,25 @@ function App() {
 
   return (
     <div className="app-layout">
-      <header className="app-header glass-panel">
-        <h1>Aura Notes</h1>
-        <p>Interactive Fingerboard & Scale Explorer</p>
-      </header>
+      
+      {/* Left Pane - Purely visual instrument representation */}
+      <div className="left-pane">
+        <Fingerboard 
+          activePitchClasses={activePitchClasses}
+          rootNote={selectedKey}
+          position={selectedPosition}
+          playingNotePitch={playingNotePitch}
+          onNoteClick={handleNoteClick}
+        />
+      </div>
 
-      <main className="app-content">
+      {/* Right Pane - Operations and Dashboard */}
+      <div className="right-pane">
+        <header className="app-header">
+          <h1>Aura Notes</h1>
+          <p>Interactive Fingerboard & Scale Explorer</p>
+        </header>
+
         <Controls 
           selectedKey={selectedKey} onKeyChange={setSelectedKey}
           selectedScale={selectedScale} onScaleChange={setSelectedScale}
@@ -160,20 +173,13 @@ function App() {
         <PlaybackControls 
            octaves={octaves} onOctavesChange={setOctaves}
            tempo={tempo} onTempoChange={setTempo}
+           volume={volume} onVolumeChange={setVolume}
            isPlaying={isPlaying} onTogglePlay={() => setIsPlaying(!isPlaying)}
         />
 
-        <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
-          <Fingerboard 
-            activePitchClasses={activePitchClasses}
-            rootNote={selectedKey}
-            position={selectedPosition}
-            playingNotePitch={playingNotePitch}
-            onNoteClick={handleNoteClick}
-          />
-          <SheetViewer notePitch={playingNotePitch} rootKey={selectedKey} scale={selectedScale} />
-        </div>
-      </main>
+        <SheetViewer notePitch={playingNotePitch} rootKey={selectedKey} scale={selectedScale} />
+      </div>
+
     </div>
   );
 }

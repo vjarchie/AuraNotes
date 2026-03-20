@@ -1,38 +1,107 @@
 .app-layout {
   display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: radial-gradient(circle at 10% 40%, rgba(100, 45, 235, 0.15), transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(45, 120, 255, 0.12), transparent 50%),
+              #08040a; /* Deep, elegant space-like background */
+  padding: 3rem 4rem;
+  box-sizing: border-box;
+  gap: 4rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #fff;
+}
+
+.left-pane {
+  flex: 0 0 500px;
+  height: 100%;
+  display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding: 2rem;
+  position: relative;
 }
 
-.app-header {
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+/* Ambient glowing aura behind the fingerboard */
+.left-pane::before {
+  content: '';
+  position: absolute;
+  top: 5%; bottom: 5%; left: -20px; right: -20px;
+  background: linear-gradient(to bottom, rgba(138, 43, 226, 0.2), rgba(0, 191, 255, 0.2));
+  filter: blur(80px);
+  z-index: 0;
+  border-radius: 100px;
+  pointer-events: none;
 }
 
-.app-header h1 {
-  font-size: 2.5rem;
-  margin: 0;
-  background: -webkit-linear-gradient(45deg, var(--accent-color), #bc70a4);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.left-pane > * {
+  z-index: 1; /* Keep actual components above the aura */
+  height: 100%;
 }
 
-.app-header p {
-  color: var(--text-secondary);
-  margin-top: 0.5rem;
-  font-size: 1.1rem;
-}
-
-.app-content {
+.right-pane {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+/* Custom scrollbar for right pane */
+.right-pane::-webkit-scrollbar {
+  width: 8px;
+}
+.right-pane::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+}
+.right-pane::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.right-pane::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+.app-header {
+  text-align: left;
+  border-radius: 20px;
+  padding: 1rem 0;
+  /* Instead of glass panel, let it be transparent organic text */
+  margin-bottom: 0.5rem;
+}
+
+.app-header h1 {
+  font-size: 3.8rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #a88bff, #8dc3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -2px;
+  text-shadow: 0 10px 30px rgba(168, 139, 255, 0.3);
+}
+
+.app-header p {
+  color: #a0a0c0;
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Making the controls wrap nicely on smaller dashboard screens */
+.glass-panel {
+  background: rgba(25, 25, 35, 0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.15);
 }
