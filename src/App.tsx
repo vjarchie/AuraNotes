@@ -3,9 +3,10 @@ import { Controls } from './components/Controls';
 import { Fingerboard } from './components/Fingerboard';
 import { PlaybackControls } from './components/PlaybackControls';
 import { SheetViewer } from './components/SheetViewer';
-import { SCALES, ARPEGGIOS, getPitchClassesInScale, getFrequency } from './utils/music';
+import { SCALES, ARPEGGIOS, getPitchClassesInScale } from './utils/music';
 import { getLowestTonicPitch, getScaleSequence } from './utils/playback';
 import { PLAYING_POSITIONS, isNotePlayableInPosition, type PositionName } from './utils/positions';
+import { getSampler } from './utils/sampler';
 import './App.css';
 import './components/Playback.css';
 
@@ -85,7 +86,7 @@ function App() {
         
         const currentPitch = playbackSequence[index];
         setPlayingNotePitch(currentPitch);
-        playSynthTone(getFrequency(currentPitch));
+        playSynthTone(currentPitch);
         shiftPositionIfNeeded(currentPitch);
 
         index++;
@@ -122,27 +123,15 @@ function App() {
   const handleNoteClick = (pitch: number) => {
     if (isPlaying) setIsPlaying(false);
     setPlayingNotePitch(pitch);
-    playSynthTone(getFrequency(pitch));
+    playSynthTone(pitch);
   };
 
-  const playSynthTone = (freq: number) => {
+  const playSynthTone = (pitch: number) => {
     try {
       const audioCtx = getAudioContext();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-
-      oscillator.type = 'sawtooth';
-      oscillator.frequency.value = freq;
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.05);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-
-      oscillator.start(audioCtx.currentTime);
-      oscillator.stop(audioCtx.currentTime + 1.5);
+      const sampler = getSampler(audioCtx);
+      sampler.setVolume(volume);
+      sampler.play(pitch);
     } catch (e) {
       console.error("Audio playback error", e);
     }
