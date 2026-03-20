@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: actions/setup-node@v4
         with:
@@ -47,13 +47,21 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
+          packages: 'platforms;android-35 build-tools;35.0.0 platform-tools'
 
       - name: Assemble debug APK
         run: |
+          set -o pipefail
           chmod +x android-app/android/gradlew
           cd android-app/android
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/gradle-assemble.log"
+
+      - name: Upload Gradle log (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-assemble-log
+          path: gradle-assemble.log
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4

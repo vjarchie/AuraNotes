@@ -1,8 +1,7 @@
 ext {
     minSdkVersion = 23
-    // 34: reliable on CI emulators / sdkmanager; bump when Play requires newer target
-    compileSdkVersion = 34
-    targetSdkVersion = 34
+    compileSdkVersion = 35
+    targetSdkVersion = 35
     androidxActivityVersion = '1.9.2'
     androidxAppCompatVersion = '1.7.0'
     androidxCoordinatorLayoutVersion = '1.2.0'
