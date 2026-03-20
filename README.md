@@ -46,6 +46,8 @@ From the repo root:
 1. `npm run android:sync` — builds the web app and copies `dist` into the Android project.
 2. Open **`android-app/android`** in Android Studio and run or build a signed release.
 
+**CI:** GitHub Actions workflow **Android build (APK)** uploads a **debug APK** artifact you can install on an emulator or device.
+
 Details: see [`android-app/README.md`](android-app/README.md).
 
 ---

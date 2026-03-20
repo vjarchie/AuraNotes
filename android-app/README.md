@@ -38,8 +38,8 @@ The Android app runs the same React bundle as desktop Electron: fingerboard, sca
 
 In Android Studio: **Build → Generate Signed Bundle / APK** and follow the wizard for a Play-ready **AAB** or sideload **APK**.
 
-## Test on an emulator (no local Android Studio)
+## CI: debug APK (install on an emulator or phone)
 
-If this PC does not have the Android SDK, use **GitHub Actions**: workflow **Android emulator smoke test** (`.github/workflows/android-emulator.yml`). It builds the web app, runs **Capacitor sync**, starts an **API 30 x86_64 AVD**, installs **debug** APK, and launches `com.aurnotes.app`.
+Workflow **Android build (APK)** (`.github/workflows/android-build.yml`) runs on **push to `main`**, **pull requests**, and **workflow_dispatch**. It builds the web app, runs **Capacitor sync**, runs **Gradle `assembleDebug`**, and uploads an artifact **`aura-notes-debug-apk`**.
 
-Trigger: push to `main`, open a **pull request**, or **Actions → Android emulator smoke test → Run workflow**.
+**Try it in a simulator:** download that artifact from the workflow run → drag the APK onto a running **Android Studio** AVD, or use `adb install -r app-debug.apk`. On Windows with Android Studio installed, the SDK is usually under `%LOCALAPPDATA%\Android\Sdk`.
