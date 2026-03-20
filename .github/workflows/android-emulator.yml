@@ -50,15 +50,23 @@ jobs:
       - name: Emulator — assemble, install, launch app
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 34
           arch: x86_64
           target: google_apis
           disable-animations: true
+          # Extra space + software GPU avoids some adb install failures (exit 224) on CI
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -partition-size 8192
           script: |
             set -e
+            adb wait-for-device
+            booted=""
+            until [ "$booted" = "1" ]; do
+              booted=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || echo 0)
+              sleep 2
+            done
+            adb uninstall com.aurnotes.app 2>/dev/null || true
             cd android-app/android
             ./gradlew assembleDebug installDebug --no-daemon --stacktrace
             adb devices -l
-            # Opening the launcher activity (best-effort; strict parsing of `am start -W` varies by API/ADB)
             adb shell am start -n com.aurnotes.app/.MainActivity || true
             echo "OK: debug APK built and installed on the CI emulator"
