@@ -58,12 +58,13 @@ jobs:
             set -e
             cd android-app/android
             ./gradlew assembleDebug installDebug --no-daemon --stacktrace
-            adb shell am start -n com.aurnotes.app/.MainActivity
-            sleep 10
-            PID=$(adb shell pidof com.aurnotes.app | tr -d '\r')
-            if [ -z "$PID" ]; then
-              echo "::error::com.aurnotes.app is not running after launch"
-              adb shell dumpsys activity activities | tail -n 40 || true
+            adb devices -l
+            # -W waits until the activity window is up; pidof is unreliable (multi-process / WebView)
+            OUT=$(adb shell am start -W -n com.aurnotes.app/.MainActivity 2>&1) || true
+            echo "$OUT"
+            if ! echo "$OUT" | grep -q 'Status: ok'; then
+              echo "::error::Activity did not report Status: ok"
+              adb logcat -d -t 80 '*:E' || true
               exit 1
             fi
-            echo "OK: com.aurnotes.app running (pid=$PID)"
+            echo "OK: MainActivity launched on emulator"
